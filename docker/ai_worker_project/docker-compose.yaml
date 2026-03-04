@@ -1,0 +1,76 @@
+version: '3.8'
+
+services:
+  # 1. Redis: Message Broker
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+
+  # 2. Worker: Celery Worker (AI Processing)
+  worker:
+    build: .
+    command: celery -A worker worker --loglevel=info
+    depends_on:
+      - redis
+    volumes:
+      - .:/app
+    working_dir: /app
+
+  # 3. API: FastAPI Server
+  api:
+    build: .
+    command: uvicorn main:app --host 0.0.0.0 --port 8000
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+    volumes:
+      - .:/app
+    working_dir: /app
+
+  # 4. Flower: Celery Monitoring Tool
+  flower:
+    build: .
+    command: celery -A worker flower --port=5555
+    ports:
+      - "5555:5555"
+    depends_on:
+      - redis
+      - worker
+    volumes:
+      - .:/app
+    working_dir: /app
+
+  # 5. Prometheus: Metrics Collection
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+
+  # 6. Node Exporter: Server Hardware Metrics
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: node-exporter
+    restart: unless-stopped
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.rootfs=/rootfs'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+    ports:
+      - "9100:9100"
+
+  # 7. Grafana: Data Visualization
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus

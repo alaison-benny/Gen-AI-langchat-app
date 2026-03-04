@@ -1,0 +1,8 @@
+FROM python:3.9-slim
+
+WORKDIR /app
+
+# Flower ഉൾപ്പെടെയുള്ള എല്ലാ ലൈബ്രറികളും ഇവിടെ ഇൻസ്റ്റാൾ ചെയ്യുന്നു
+RUN pip install fastapi uvicorn celery redis transformers torch flower
+
+COPY . .
