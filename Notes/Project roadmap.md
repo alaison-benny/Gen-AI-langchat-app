@@ -43,7 +43,7 @@ AI മോഡലുകളുടെ നിർമ്മാണവും അവയു
 
 ഇപ്പോൾ നിങ്ങളുടെ പക്കൽ വ്യക്തമായ ഒരു പ്ലാനും സമയക്രമവും ഉണ്ട്. 
 
-**Start your 21 day strek. Consistancy is the key. ജയിച്ചിട്രാ Maara **
+## Start your 21 day strek. Consistancy is the key. ജയിച്ചിട്രാ Maara
 
 <img width="675" height="471" alt="image" src="https://github.com/user-attachments/assets/5d62a56b-ca5a-4288-b591-0780eea3e0d3" />
 
